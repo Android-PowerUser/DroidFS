@@ -7,23 +7,30 @@ import sushi.hardcore.droidfs.*
 import sushi.hardcore.droidfs.databinding.ActivityAddVolumeBinding
 import sushi.hardcore.droidfs.explorers.ExplorerRouter
 
+// AddVolumeActivity ist eine Aktivität, die es dem Benutzer ermöglicht, ein neues Volume hinzuzufügen oder ein vorhandenes Volume zu öffnen.
 class AddVolumeActivity: BaseActivity() {
 
     companion object {
         const val RESULT_USER_BACK = 10
     }
 
+    // Deklaration der Variablen
     private lateinit var binding: ActivityAddVolumeBinding
     private lateinit var explorerRouter: ExplorerRouter
     private lateinit var volumeOpener: VolumeOpener
 
+    // onCreate-Methode wird aufgerufen, wenn die Aktivität erstellt wird
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialisierung der View-Bindung
         binding = ActivityAddVolumeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Aktivieren des Zurück-Buttons in der ActionBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Initialisierung des ExplorerRouters und des VolumeOpeners
         explorerRouter = ExplorerRouter(this, intent)
         volumeOpener = VolumeOpener(this)
+        // Laden des SelectPathFragment, wenn kein gespeicherter Zustand vorhanden ist
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
@@ -33,6 +40,7 @@ class AddVolumeActivity: BaseActivity() {
                 )
                 .commit()
         }
+        // Hinzufügen eines Rückrufes für die Zurück-Taste
         onBackPressedDispatcher.addCallback(this) {
             setResult(RESULT_USER_BACK)
             isEnabled = false
@@ -40,6 +48,7 @@ class AddVolumeActivity: BaseActivity() {
         }
     }
 
+    // onOptionsItemSelected-Methode wird aufgerufen, wenn ein Menüelement ausgewählt wird
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             if (supportFragmentManager.backStackEntryCount > 0)
@@ -52,6 +61,7 @@ class AddVolumeActivity: BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // Methode, die aufgerufen wird, wenn ein Fragment geladen wird
     fun onFragmentLoaded(selectPathFragment: Boolean) {
         title = getString(
             if (selectPathFragment) {
@@ -62,16 +72,19 @@ class AddVolumeActivity: BaseActivity() {
         )
     }
 
+    // Methode zum Starten des Explorers
     fun startExplorer(volumeId: Int, volumeShortName: String) {
         startActivity(explorerRouter.getExplorerIntent(volumeId, volumeShortName))
         finish()
     }
 
+    // Methode, die aufgerufen wird, wenn ein Volume hinzugefügt wurde
     fun onVolumeAdded() {
         setResult(RESULT_USER_BACK)
         finish()
     }
 
+    // Methode zum Öffnen eines Volumes
     fun openVolume(volume: VolumeData, isVolumeKnown: Boolean) {
         volumeOpener.openVolume(volume, isVolumeKnown, object : VolumeOpener.VolumeOpenerCallbacks {
             override fun onVolumeOpened(id: Int) {
@@ -80,6 +93,7 @@ class AddVolumeActivity: BaseActivity() {
         })
     }
 
+    // Methode zum Erstellen eines Volumes
     fun createVolume(volumePath: String, isHidden: Boolean, rememberVolume: Boolean) {
         supportFragmentManager
             .beginTransaction()

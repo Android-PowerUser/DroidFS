@@ -20,8 +20,10 @@ import sushi.hardcore.droidfs.util.UIUtils
 import sushi.hardcore.droidfs.widgets.CustomAlertDialogBuilder
 import java.util.*
 
+// ChangePasswordActivity ist eine Aktivität, die es dem Benutzer ermöglicht, das Passwort eines verschlüsselten Volumes zu ändern.
 class ChangePasswordActivity: BaseActivity() {
 
+    // Deklaration der Variablen
     private lateinit var binding: ActivityChangePasswordBinding
     private lateinit var volume: VolumeData
     private lateinit var volumeDatabase: VolumeDatabase
@@ -31,15 +33,21 @@ class ChangePasswordActivity: BaseActivity() {
         getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
+    // onCreate-Methode wird aufgerufen, wenn die Aktivität erstellt wird
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialisierung der View-Bindung und des Volumes
         volume = IntentUtils.getParcelableExtra(intent, "volume")!!
         binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Setzen des Titels und Aktivieren des Zurück-Buttons in der ActionBar
         title = getString(R.string.change_password)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Setzen des Volumen-Namens
         binding.textVolumeName.text = volume.name
+        // Initialisierung der Volume-Datenbank
         volumeDatabase = VolumeDatabase(this)
+        // Überprüfen, ob Fingerabdruck-Authentifizierung aktiviert ist
         usfFingerprint = sharedPrefs.getBoolean("usf_fingerprint", false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fingerprintProtector = FingerprintProtector.new(this, theme, volumeDatabase)
@@ -76,6 +84,7 @@ class ChangePasswordActivity: BaseActivity() {
         binding.button.setOnClickListener { changeVolumePassword() }
     }
 
+    // onOptionsItemSelected-Methode wird aufgerufen, wenn ein Menüelement ausgewählt wird
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == android.R.id.home) {
             finish()
@@ -83,11 +92,13 @@ class ChangePasswordActivity: BaseActivity() {
         } else super.onOptionsItemSelected(item)
     }
 
+    // Methode zum Anzeigen der Eingabeaufforderung für das aktuelle Passwort
     private fun showCurrentPasswordInput() {
         binding.textCurrentPasswordLabel.visibility = View.VISIBLE
         binding.editCurrentPassword.visibility = View.VISIBLE
     }
 
+    // Methode zum Ändern des Volumen-Passworts
     private fun changeVolumePassword() {
         val newPassword = UIUtils.encodeEditTextContent(binding.editNewPassword)
         val newPasswordConfirm = UIUtils.encodeEditTextContent(binding.editPasswordConfirm)
@@ -128,6 +139,7 @@ class ChangePasswordActivity: BaseActivity() {
         Arrays.fill(newPasswordConfirm, 0)
     }
 
+    // Methode zum Ändern des Volumen-Passworts mit dem aktuellen Passwort oder einem gegebenen Hash
     private fun changeVolumePassword(newPassword: ByteArray, givenHash: ByteArray? = null) {
         val returnedHash: ObjRef<ByteArray?>? = if (binding.checkboxSavePassword.isChecked) {
             ObjRef(null)
@@ -208,6 +220,7 @@ class ChangePasswordActivity: BaseActivity() {
         }
     }
 
+    // onStop-Methode wird aufgerufen, wenn die Aktivität gestoppt wird
     override fun onStop() {
         super.onStop()
         binding.editCurrentPassword.text.clear()

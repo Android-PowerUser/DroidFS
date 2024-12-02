@@ -53,7 +53,10 @@ import sushi.hardcore.droidfs.util.finishOnClose
 import sushi.hardcore.droidfs.widgets.CustomAlertDialogBuilder
 import sushi.hardcore.droidfs.widgets.EditTextDialog
 
+// BaseExplorerActivity ist eine Basisklasse für alle Explorer-Aktivitäten in der Anwendung.
+// Sie stellt gemeinsame Funktionalitäten und Einstellungen bereit, die von anderen Explorer-Aktivitäten geerbt werden können.
 open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listener {
+    // Deklaration der Variablen
     private lateinit var sortOrderEntries: Array<String>
     private lateinit var sortOrderValues: Array<String>
     private var foldersFirst = true
@@ -89,8 +92,10 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
     private lateinit var totalSizeText: TextView
     protected val fileShare by lazy { FileShare(this) }
 
+    // onCreate-Methode wird aufgerufen, wenn die Aktivität erstellt wird
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialisierung der Variablen
         app = application as VolumeManagerApp
         usf_open = sharedPrefs.getBoolean("usf_open", false)
         volumeName = intent.getStringExtra("volumeName") ?: ""
@@ -163,10 +168,12 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         bindFileOperationService()
     }
 
+    // ExplorerViewModel ist eine ViewModel-Klasse, die den aktuellen Verzeichnispfad speichert.
     class ExplorerViewModel: ViewModel() {
         var currentDirectoryPath = "/"
     }
 
+    // Methode zum Setzen des Layouts des RecyclerViews
     private fun setRecyclerViewLayout() {
         layoutIcon.setImageResource(if (isUsingListLayout) {
             recycler_view_explorer.layoutManager = linearLayoutManager
@@ -181,16 +188,19 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         })
     }
 
+    // Methode zum Initialisieren der Aktivität
     protected open fun init() {
         setContentView(R.layout.activity_explorer)
     }
 
+    // Methode zum Binden des FileOperationService
     protected open fun bindFileOperationService() {
         FileOperationService.bind(this) {
             fileOperationService = it
         }
     }
 
+    // Methode zum Starten eines Dateibetrachters
     private fun startFileViewer(cls: Class<*>, filePath: String) {
         val intent = Intent(this, cls).apply {
             putExtra("path", filePath)
@@ -200,6 +210,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         startActivity(intent)
     }
 
+    // Methode, die aufgerufen wird, wenn der Export fehlschlägt
     protected fun onExportFailed(errorResId: Int) {
         CustomAlertDialogBuilder(this, theme)
             .setTitle(R.string.error)
@@ -208,6 +219,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
             .show()
     }
 
+    // Methode zum Öffnen einer Datei mit einer externen App
     private fun openWithExternalApp(path: String, size: Long) {
         app.isExporting = true
         val exportedFile = TemporaryFileProvider.instance.encryptedFileProvider.createFile(path, size)
@@ -235,6 +247,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Anzeigen des "Öffnen als"-Dialogs
     private fun showOpenAsDialog(explorerElement: ExplorerElement) {
         val path = explorerElement.fullPath
         val adapter = OpenAsDialogAdapter(this, usf_open)
@@ -257,6 +270,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
             .show()
     }
 
+    // Methode zum Erstellen einer neuen Datei
     protected fun createNewFile(callback: (Long) -> Unit) {
         EditTextDialog(this, R.string.enter_file_name) {
             if (it.isEmpty()) {
@@ -278,10 +292,12 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }.show()
     }
 
+    // Methode zum Setzen des Titels mit dem Volumennamen
     private fun setVolumeNameTitle() {
         titleText.text = getString(R.string.volume, volumeName)
     }
 
+    // Methode, die aufgerufen wird, wenn sich die Auswahl ändert
     override fun onSelectionChanged(size: Int) {
         if (size == 0) {
             setVolumeNameTitle()
@@ -290,6 +306,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode, die aufgerufen wird, wenn ein Explorer-Element angeklickt wird
     override fun onExplorerElementClick(position: Int) {
         if (explorerAdapter.selectedItems.isEmpty()) {
             val fullPath = explorerElements[position].fullPath
@@ -321,15 +338,18 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         invalidateOptionsMenu()
     }
 
+    // Methode, die aufgerufen wird, wenn ein Explorer-Element lange angeklickt wird
     override fun onExplorerElementLongClick(position: Int) {
         invalidateOptionsMenu()
     }
 
+    // Methode zum Deselektieren aller Elemente
     protected fun unselectAll(notifyChange: Boolean = true) {
         explorerAdapter.unSelectAll(notifyChange)
         invalidateOptionsMenu()
     }
 
+    // Methode zum Anzeigen der Explorer-Elemente
     private fun displayExplorerElements() {
         ExplorerElement.sortBy(sortOrderValues[currentSortOrderIndex], foldersFirst, explorerElements)
         unselectAll(false)
@@ -338,6 +358,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         explorerAdapter.explorerElements = explorerElements
     }
 
+    // Methode zum Rekursiven Setzen der Größe eines Verzeichnisses
     private suspend fun recursiveSetSize(directory: ExplorerElement) {
         yield()
         for (child in encryptedVolume.readDir(directory.fullPath) ?: return) {
@@ -348,6 +369,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Anzeigen der Anzahl der Elemente
     private fun displayNumberOfElements(textView: TextView, stringIdSingular: Int, stringIdPlural: Int, count: Int) {
         with(textView) {
             visibility = if (count == 0) {
@@ -363,6 +385,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Setzen des aktuellen Pfads
     protected fun setCurrentPath(path: String, onDisplayed: (() -> Unit)? = null) = lifecycleScope.launch {
         directoryLoadingTask?.cancelAndJoin()
         recycler_view_explorer.isVisible = false
@@ -403,6 +426,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Fragen, ob das Volume gesperrt werden soll
     private fun askLockVolume() {
         CustomAlertDialogBuilder(this, theme)
                 .setTitle(R.string.warning)
@@ -415,6 +439,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
                 .show()
     }
 
+    // Methode zum Erstellen eines Verzeichnisses
     private fun createFolder(folderName: String){
         if (folderName.isEmpty()) {
             Toast.makeText(this, R.string.error_filename_empty, Toast.LENGTH_SHORT).show()
@@ -432,12 +457,14 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Öffnen des Dialogs zum Erstellen eines Verzeichnisses
     protected fun openDialogCreateFolder() {
         EditTextDialog(this, R.string.enter_folder_name) {
             createFolder(it)
         }.show()
     }
 
+    // Methode zum Überprüfen, ob der Pfad überschrieben wird
     protected fun checkPathOverwrite(items: List<OperationFile>, dstDirectoryPath: String, callback: (List<OperationFile>?) -> Unit) {
         val srcDirectoryPath = items[0].parentPath
         var ready = true
@@ -502,6 +529,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Behandeln des Ergebnisses einer Aufgabe
     protected fun onTaskResult(
         result: TaskResult<out String?>,
         failedErrorMessage: Int,
@@ -528,6 +556,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Importieren von Dateien aus URIs
     protected fun importFilesFromUris(uris: List<Uri>, callback: () -> Unit) {
         val items = ArrayList<OperationFile>()
         for (uri in uris) {
@@ -557,6 +586,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Umbenennen einer Datei oder eines Verzeichnisses
     protected fun rename(old_name: String, new_name: String){
         if (new_name.isEmpty()) {
             Toast.makeText(this, R.string.error_filename_empty, Toast.LENGTH_SHORT).show()
@@ -575,6 +605,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // Methode zum Erstellen des Optionsmenüs
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.rename).isVisible = false
         menu.findItem(R.id.open_as)?.isVisible = false
@@ -604,6 +635,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         return super.onCreateOptionsMenu(menu)
     }
 
+    // Methode zum Behandeln der Auswahl eines Menüelements
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -662,6 +694,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // onDestroy-Methode wird aufgerufen, wenn die Aktivität zerstört wird
     override fun onDestroy() {
         super.onDestroy()
         if (!isChangingConfigurations) { //activity won't be recreated
@@ -669,6 +702,7 @@ open class BaseExplorerActivity : BaseActivity(), ExplorerElementAdapter.Listene
         }
     }
 
+    // onResume-Methode wird aufgerufen, wenn die Aktivität fortgesetzt wird
     override fun onResume() {
         super.onResume()
         if (app.isStartingExternalApp) {

@@ -62,6 +62,7 @@ import java.util.concurrent.Executor
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+// CameraActivity ist eine Aktivität, die es dem Benutzer ermöglicht, Fotos und Videos aufzunehmen und diese in einem verschlüsselten Volume zu speichern.
 @SuppressLint("RestrictedApi")
 class CameraActivity : BaseActivity(), SensorOrientationListener.Listener {
     companion object {
@@ -73,6 +74,7 @@ class CameraActivity : BaseActivity(), SensorOrientationListener.Listener {
         private val random = Random()
     }
 
+    // Deklaration der Variablen
     private var timerDuration = 0
         set(value) {
             field = value
@@ -113,17 +115,23 @@ class CameraActivity : BaseActivity(), SensorOrientationListener.Listener {
     private var isWaitingForTimer = false
     private lateinit var binding: ActivityCameraBinding
 
+    // onCreate-Methode wird aufgerufen, wenn die Aktivität erstellt wird
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialisierung der View-Bindung
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Verstecken der ActionBar
         supportActionBar?.hide()
+        // Initialisierung des verschlüsselten Volumes
         encryptedVolume = (application as VolumeManagerApp).volumeManager.getVolume(
             intent.getIntExtra("volumeId", -1)
         )!!
         finishOnClose(encryptedVolume)
+        // Initialisierung des Ausgabeverzeichnisses
         outputDirectory = intent.getStringExtra("path")!!
 
+        // Überprüfen und Anfordern von Berechtigungen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
                 permissionsGranted = true
@@ -134,8 +142,11 @@ class CameraActivity : BaseActivity(), SensorOrientationListener.Listener {
             permissionsGranted = true
         }
 
+        // Initialisierung des Executors
         executor = ContextCompat.getMainExecutor(this)
+        // Setzen des SurfaceProviders für die Kamera-Vorschau
         cameraPreview.setSurfaceProvider(binding.cameraPreview.surfaceProvider)
+        // Initialisierung des CameraProviders und des ExtensionsManagers
         ProcessCameraProvider.getInstance(this).apply {
             addListener({
                 cameraProvider = get()
@@ -148,6 +159,7 @@ class CameraActivity : BaseActivity(), SensorOrientationListener.Listener {
             }, executor)
         }
 
+        // Setzen der OnClickListener für die verschiedenen Schaltflächen
         binding.imageCaptureMode.setOnClickListener {
             if (isInVideoMode) {
                 qualities?.let { qualities ->
