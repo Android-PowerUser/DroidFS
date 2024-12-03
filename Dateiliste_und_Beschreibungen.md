@@ -1,6 +1,6 @@
-# Dateiliste
+# Dateiliste und Beschreibungen
 
-Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse im Stammverzeichnis, deren Funktionen und Inhalte.
+Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse im Stammverzeichnis und darüber hinaus, deren Funktionen und Inhalte.
 
 ## Dateien im Stammverzeichnis
 
@@ -60,13 +60,41 @@ Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse i
 - **Funktion**: Enthält Java- und Kotlin-Quellcode für das App-Modul.
 - **Inhalt**: Quellcodedateien für verschiedene Funktionen und Funktionalitäten.
 
-#### app/src/main/native
-- **Funktion**: Enthält nativen C/C++-Quellcode für das App-Modul.
-- **Inhalt**: Native Code-Dateien für verschiedene Funktionalitäten.
+##### app/src/main/java/androidx/camera/video/MediaMuxer.kt
+- **Funktion**: Schnittstelle für MediaMuxer.
+- **Inhalt**: Methoden zur Verwaltung von MediaMuxer-Operationen.
 
-#### app/src/main/res
-- **Funktion**: Enthält Ressourcen für das App-Modul.
-- **Inhalt**: Layouts, Drawables, Strings und andere Ressourcendateien.
+##### app/src/main/java/sushi/hardcore/droidfs/adapters/ExplorerElementAdapter.kt
+- **Funktion**: Adapter für Explorer-Elemente.
+- **Inhalt**: Verwaltung der Anzeige und Interaktion von Explorer-Elementen.
+
+##### app/src/main/java/sushi/hardcore/droidfs/BaseActivity.kt
+- **Funktion**: Basisklasse für Aktivitäten.
+- **Inhalt**: Gemeinsame Funktionalitäten und Einstellungen für Aktivitäten.
+
+##### app/src/main/java/sushi/hardcore/droidfs/ClosingService.kt
+- **Funktion**: Hintergrunddienst zum Schließen von Volumes.
+- **Inhalt**: Schließt alle offenen Volumes beim Entfernen von Anwendungstasks.
+
+##### app/src/main/java/sushi/hardcore/droidfs/collation/ByteString.kt
+- **Funktion**: Klasse für Byte-Strings.
+- **Inhalt**: Verwaltung und Vergleich von Byte-Strings.
+
+##### app/src/main/java/sushi/hardcore/droidfs/collation/ByteStringBuilder.kt
+- **Funktion**: Builder für Byte-Strings.
+- **Inhalt**: Erstellung und Verwaltung von Byte-Strings.
+
+##### app/src/main/java/sushi/hardcore/droidfs/Constants.kt
+- **Funktion**: Enthält Konstanten für die Anwendung.
+- **Inhalt**: Definition von Konstanten wie Datenbanknamen und Puffergrößen.
+
+##### app/src/main/java/sushi/hardcore/droidfs/explorers/BaseExplorerActivity.kt
+- **Funktion**: Basisklasse für Explorer-Aktivitäten.
+- **Inhalt**: Gemeinsame Funktionalitäten und Einstellungen für Explorer-Aktivitäten.
+
+##### app/src/main/java/sushi/hardcore/droidfs/MainActivity.kt
+- **Funktion**: Hauptaktivität der Anwendung.
+- **Inhalt**: Verwaltung der Hauptbenutzeroberfläche und Navigation.
 
 ### build.gradle
 - **Funktion**: Gradle-Build-Skript für das Projekt.
@@ -120,6 +148,6 @@ Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse i
 - **Funktion**: Enthält Gradle Wrapper-Eigenschaften.
 - **Inhalt**: Wrapper-Eigenschaften und Jar-Dateien für Gradle.
 
-### file_list.md
-- **Funktion**: Diese Datei, die alle Dateien und Verzeichnisse im Stammverzeichnis auflistet.
+### Dateiliste_und_Beschreibungen.md
+- **Funktion**: Diese Datei, die alle Dateien und Verzeichnisse im Stammverzeichnis und darüber hinaus auflistet.
 - **Inhalt**: Detaillierte Liste der Dateien und Verzeichnisse, deren Funktionen und Inhalte.
