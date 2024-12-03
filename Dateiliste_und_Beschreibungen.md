@@ -1,6 +1,6 @@
 # Dateiliste und Beschreibungen
 
-Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse im Stammverzeichnis und darüber hinaus, deren Funktionen und Inhalte.
+Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse im Repo und deren Funktionen und Inhalte.
 
 ## Dateien im Stammverzeichnis
 
