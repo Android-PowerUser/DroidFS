@@ -475,3 +475,11 @@ Dieses Dokument bietet eine detaillierte Liste aller Dateien und Verzeichnisse i
 ### app/src/main/res/xml
 - **Funktion**: Enthält XML-Ressourcen.
 - **Inhalt**: XML-Dateien für verschiedene Konfigurationen und Einstellungen.
+
+## Erklärungen zu Begriffen
+
+### Wrapper
+Ein Wrapper ist eine Abstraktionsschicht, die eine Schnittstelle zu einer anderen Software oder Bibliothek bereitstellt. Er vereinfacht die Nutzung der zugrunde liegenden Funktionalität, indem er eine einfachere oder benutzerfreundlichere Schnittstelle bietet.
+
+### fastlane
+Fastlane ist ein Open-Source-Toolset zur Automatisierung von Aufgaben im Zusammenhang mit der Veröffentlichung von mobilen Apps. Es hilft Entwicklern, Prozesse wie das Erstellen, Testen und Veröffentlichen von Apps zu automatisieren, um Zeit und Aufwand zu sparen.
